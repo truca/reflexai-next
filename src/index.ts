@@ -1,4 +1,5 @@
 import next from "next";
+import mongoose from "mongoose";
 import { Server } from "http";
 import io from "socket.io";
 import path from "path";
@@ -7,6 +8,7 @@ import fs from "fs";
 import { generateUserName } from "./server/generateUserName";
 import { createSocketHandler } from "./server/createSocketHandler";
 import { createRequestHandler } from "./server/createRequestHandler";
+import { initializeDB } from "./database/helpers/initializeDB";
 
 const port = parseInt(process.env.PORT) || 3001;
 const env = process.env.NODE_ENV || "develop";
@@ -24,6 +26,8 @@ const handler = nextApp.getRequestHandler();
 nextApp
   .prepare()
   .then(async () => {
+    await initializeDB();
+    console.log("Web server started to listen port");
     // create http server
     const httpServer = new Server((req, res) => {
       requestHandler(req, res) || handler(req, res);

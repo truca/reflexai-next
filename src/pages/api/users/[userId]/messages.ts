@@ -1,16 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
-import getDBCollection from "../../../../helpers/getDBCollection";
+import { initializeDB } from "../../../../database/helpers/initializeDB";
+import Messages, { IMessages } from "../../../../database/models/Messages";
 
-const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    const collection = getDBCollection("messages");
-    const messages = await collection.find({ userId: _req.query.userId });
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === "GET") {
+    try {
+      await initializeDB();
+      const messages = await (Messages as any).find({
+        userId: req.query.userId,
+      });
 
-    const messagesArray = await messages.toArray();
-    return res.status(200).json(messagesArray);
-  } catch (err: any) {
-    res.status(500).json({ statusCode: 500, message: err.message });
+      return res.status(200).json(messages);
+    } catch (err: any) {
+      res.status(500).json({ statusCode: 500, message: err.message });
+    }
   }
 };
 

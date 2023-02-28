@@ -1,10 +1,12 @@
+import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-import getDBCollection from "../../../helpers/getDBCollection";
+import { initializeDB } from "../../../database/helpers/initializeDB";
+import Users from "../../../database/models/Users";
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const collection = getDBCollection("users");
-    const user = await collection.findOne({ _id: _req.query.userId as any });
+    await initializeDB();
+    const user = await Users.findOne({ _id: _req.query.userId as any });
 
     return res.status(200).json(user);
   } catch (err: any) {
