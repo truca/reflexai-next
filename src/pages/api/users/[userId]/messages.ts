@@ -1,14 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
+import getDBCollection from "../../../../helpers/getDBCollection";
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const client = new MongoClient(process.env.MONGODB_URI, {
-      monitorCommands: true,
-    });
-
-    client.on("commandStarted", (started) => console.log(started));
-    const collection = client.db("reflexai").collection("messages");
+    const collection = getDBCollection("messages");
     const messages = await collection.find({ userId: _req.query.userId });
 
     const messagesArray = await messages.toArray();
