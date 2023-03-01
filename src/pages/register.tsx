@@ -4,11 +4,13 @@ import Link from "next/link";
 import axios from "axios";
 import { UserContext } from "../components/UserProvider";
 
-interface RegisterProps {}
+interface RegisterProps {
+  restServerUri: string;
+}
 
-export default function Register({}: RegisterProps): any {
+export default function Register({ restServerUri }: RegisterProps): any {
   const [username, setUsername] = useState("");
-  const { setUserContextValues } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
   const { push } = useRouter();
 
   const onChangeUsername = useCallback((e) => {
@@ -18,11 +20,11 @@ export default function Register({}: RegisterProps): any {
   const onSubmit = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault();
-      const result = await axios.post("http://localhost:3000/api/users", {
+      const result = await axios.post(`${restServerUri}api/users`, {
         name: username,
       });
-      if (result) {
-        setUserContextValues(result.data._id, username);
+      if (result?.data) {
+        setUserData(result.data._id, username);
         push("/chat");
       }
     },
@@ -86,4 +88,12 @@ export default function Register({}: RegisterProps): any {
       </div>
     </section>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: {
+      restServerUri: process.env.REST_SERVER_URI,
+    },
+  };
 }

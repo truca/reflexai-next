@@ -4,11 +4,13 @@ import Link from "next/link";
 import axios from "axios";
 import { UserContext } from "../components/UserProvider";
 
-interface LoginProps {}
+interface LoginProps {
+  restServerUri: string;
+}
 
-export default function Login({}: LoginProps): any {
+export default function Login({ restServerUri }: LoginProps): any {
   const [username, setUsername] = useState("");
-  const { setUserContextValues } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
   const { push } = useRouter();
 
   const onChangeUsername = useCallback((e) => {
@@ -18,11 +20,9 @@ export default function Login({}: LoginProps): any {
   const onSubmit = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault();
-      const result = await axios.get(
-        `http://localhost:3000/api/users/${username}`
-      );
-      if (result) {
-        setUserContextValues(result.data._id, username);
+      const result = await axios.get(`${restServerUri}api/users/${username}`);
+      if (result?.data) {
+        setUserData(result.data._id, username);
         push("/chat");
       }
     },
@@ -89,4 +89,12 @@ export default function Login({}: LoginProps): any {
       </div>
     </section>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: {
+      restServerUri: process.env.REST_SERVER_URI,
+    },
+  };
 }

@@ -2,10 +2,17 @@ import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
-export interface IMessages {
+export enum MessageFrom {
+  USER = "user",
+  BOT = "bot",
+}
+
+export interface IMessage {
+  _id: string;
   userId: string;
   message: string;
   createdAt: Date;
+  from: MessageFrom;
 }
 
 const messageSchema = new Schema({
@@ -30,5 +37,5 @@ const messageSchema = new Schema({
 });
 
 const Messages =
-  mongoose.models.Messages || model<IMessages>("Messages", messageSchema);
+  mongoose.models.Messages || model<IMessage>("Messages", messageSchema);
 export default Messages;

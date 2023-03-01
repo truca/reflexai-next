@@ -4,15 +4,15 @@ import { useRouter } from "next/router";
 interface UserContextValue {
   userId?: string;
   userName?: string;
-  setUserContextValues: (userId: string, userName: string) => void;
+  setUserData: (userId: string, userName: string) => void;
 }
 
 export const UserContext = React.createContext<UserContextValue>({
-  setUserContextValues: () => {},
+  setUserData: () => {},
 });
 
 const USER_DATA_KEY = "REFLEXAI_USER";
-const UNAUTHORIZED_ROUTES = ["/login", "/register"];
+const LOGIN_PATHS = ["/login", "/register"];
 
 interface UserProviderProps {
   children: any;
@@ -23,37 +23,38 @@ function UserProvider({ children }: UserProviderProps) {
   const [userName, setUserName] = useState<string | undefined>();
   const { pathname, push } = useRouter();
 
+  // initialization
   useEffect(() => {
     const localValue = localStorage.getItem(USER_DATA_KEY);
 
-    if (!localValue && !UNAUTHORIZED_ROUTES.includes(pathname)) {
+    const isLoggedIn = Boolean(localValue);
+    const isInLoginPath = LOGIN_PATHS.includes(pathname);
+    if (!isLoggedIn && !isInLoginPath) {
       push("/login");
       return;
     }
-    if (!localValue) return;
+
+    if (!isLoggedIn) return;
 
     const { userId: userIdArg, userName: userNameArg } = JSON.parse(localValue);
     setUserId(userIdArg);
     setUserName(userNameArg);
-    if (UNAUTHORIZED_ROUTES.includes(pathname)) {
+    if (isInLoginPath) {
       push("/chat");
     }
   }, []);
 
-  const setUserContextValues = useCallback(
-    (userIdArg: string, userNameArg: string) => {
-      localStorage.setItem(
-        USER_DATA_KEY,
-        JSON.stringify({ userId: userIdArg, userName: userNameArg })
-      );
-      setUserId(userIdArg);
-      setUserName(userNameArg);
-    },
-    []
-  );
+  const setUserData = useCallback((userIdArg: string, userNameArg: string) => {
+    localStorage.setItem(
+      USER_DATA_KEY,
+      JSON.stringify({ userId: userIdArg, userName: userNameArg })
+    );
+    setUserId(userIdArg);
+    setUserName(userNameArg);
+  }, []);
 
   return (
-    <UserContext.Provider value={{ userId, userName, setUserContextValues }}>
+    <UserContext.Provider value={{ userId, userName, setUserData }}>
       {children}
     </UserContext.Provider>
   );
