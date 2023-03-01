@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormField it renders correctly 1`] = `
+<div>
+  <label
+    className="block text-gray-700"
+    htmlFor="Field"
+  >
+    Field
+  </label>
+  <input
+    autoFocus={true}
+    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+    id="Field"
+    onChange={[Function]}
+    placeholder="Fill the field"
+    required={true}
+    type="text"
+    value=""
+  />
+</div>
+`;
+
+exports[`FormField renders correctly a state with value 1`] = `
+<div>
+  <label
+    className="block text-gray-700"
+    htmlFor="Field"
+  >
+    Field
+  </label>
+  <input
+    autoFocus={true}
+    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+    id="Field"
+    onChange={[Function]}
+    placeholder="Fill the field"
+    required={true}
+    type="text"
+    value="value for the field"
+  />
+</div>
+`;
+
+exports[`FormField renders correctly a state with value 2`] = `
+<div>
+  <label
+    className="block text-gray-700"
+    htmlFor="Field"
+  >
+    Field
+  </label>
+  <input
+    autoFocus={true}
+    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+    id="Field"
+    onChange={[Function]}
+    placeholder="Fill the field"
+    required={true}
+    type="text"
+    value="value for the field"
+  />
+</div>
+`;
+
+exports[`FormField renders correctly the empty state 1`] = `
+<div>
+  <label
+    className="block text-gray-700"
+    htmlFor="Field"
+  >
+    Field
+  </label>
+  <input
+    autoFocus={true}
+    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+    id="Field"
+    onChange={[Function]}
+    placeholder="Fill the field"
+    required={true}
+    type="text"
+    value=""
+  />
+</div>
+`;
