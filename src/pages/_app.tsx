@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
       <UserProvider>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </UserProvider>
     </>
   );
