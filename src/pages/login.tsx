@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import { UserContext } from "../components/UserProvider";
@@ -7,7 +8,8 @@ interface LoginProps {}
 
 export default function Login({}: LoginProps): any {
   const [username, setUsername] = useState("");
-  const { userId, setUserContextValues } = useContext(UserContext);
+  const { setUserContextValues } = useContext(UserContext);
+  const { push } = useRouter();
 
   const onChangeUsername = useCallback((e) => {
     setUsername(e.target.value);
@@ -21,7 +23,7 @@ export default function Login({}: LoginProps): any {
       );
       if (result) {
         setUserContextValues(result.data._id, username);
-        window.location = "/chat";
+        push("/chat");
       }
     },
     [username]

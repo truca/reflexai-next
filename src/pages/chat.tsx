@@ -136,10 +136,12 @@ const ChatPage = () => {
 
           <Input value={inputValue} setValue={onInputChange} />
           <button
+            type="button"
             className="absolute rounded-full w-8 h-8 bg-blue-800 bottom-5 right-5 text-white flex justify-center items-center"
             onClick={sendMessage}
           >
-            <i className="fa fa-send-o"></i>
+            <span className="hidden">Send</span>
+            <i className="fa fa-send-o mr-0.5"></i>
           </button>
         </div>
       </div>

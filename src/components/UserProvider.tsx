@@ -21,13 +21,13 @@ interface UserProviderProps {
 function UserProvider({ children }: UserProviderProps) {
   const [userId, setUserId] = useState<string | undefined>();
   const [userName, setUserName] = useState<string | undefined>();
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
 
   useEffect(() => {
     const localValue = localStorage.getItem(USER_DATA_KEY);
 
     if (!localValue && !UNAUTHORIZED_ROUTES.includes(pathname)) {
-      window.location = "/login";
+      push("/login");
       return;
     }
     if (!localValue) return;
@@ -36,7 +36,7 @@ function UserProvider({ children }: UserProviderProps) {
     setUserId(userIdArg);
     setUserName(userNameArg);
     if (UNAUTHORIZED_ROUTES.includes(pathname)) {
-      window.location = "/chat";
+      push("/chat");
     }
   }, []);
 

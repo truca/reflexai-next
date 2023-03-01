@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import { UserContext } from "../components/UserProvider";
@@ -9,6 +9,7 @@ interface RegisterProps {}
 export default function Register({}: RegisterProps): any {
   const [username, setUsername] = useState("");
   const { setUserContextValues } = useContext(UserContext);
+  const { push } = useRouter();
 
   const onChangeUsername = useCallback((e) => {
     setUsername(e.target.value);
@@ -22,7 +23,7 @@ export default function Register({}: RegisterProps): any {
       });
       if (result) {
         setUserContextValues(result.data._id, username);
-        window.location = "/chat";
+        push("/chat");
       }
     },
     [username]
