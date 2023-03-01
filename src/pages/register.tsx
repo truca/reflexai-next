@@ -1,12 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
+import { UserContext } from "../components/UserProvider";
 
 interface RegisterProps {}
 
 export default function Register({}: RegisterProps): any {
   const [username, setUsername] = useState("");
+  const { setUserContextValues } = useContext(UserContext);
 
   const onChangeUsername = useCallback((e) => {
     setUsername(e.target.value);
@@ -18,7 +20,10 @@ export default function Register({}: RegisterProps): any {
       const result = await axios.post("http://localhost:3000/api/users", {
         name: username,
       });
-      window.location = "/chat";
+      if (result) {
+        setUserContextValues(result.data._id, username);
+        window.location = "/chat";
+      }
     },
     [username]
   );

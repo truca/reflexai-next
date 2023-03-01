@@ -1,11 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { UserContext } from "../components/UserProvider";
 
 interface LoginProps {}
 
 export default function Login({}: LoginProps): any {
   const [username, setUsername] = useState("");
+  const { userId, setUserContextValues } = useContext(UserContext);
 
   const onChangeUsername = useCallback((e) => {
     setUsername(e.target.value);
@@ -17,7 +19,10 @@ export default function Login({}: LoginProps): any {
       const result = await axios.get(
         `http://localhost:3000/api/users/${username}`
       );
-      if (result) window.location = "/chat";
+      if (result) {
+        setUserContextValues(result.data._id, username);
+        window.location = "/chat";
+      }
     },
     [username]
   );
