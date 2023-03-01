@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import axios from "axios";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import cn from "classnames";
 import Head from "next/head";
+import { UserContext } from "../components/UserProvider";
+import { IMessages } from "../database/models/Messages";
+import dayjs from "dayjs";
 
 interface InputProps {
   value: string | null;
-  setValue: (value: string | null) => void;
+  setValue: (e) => void;
 }
 
 const Input = ({ value, setValue }: InputProps) => {
@@ -14,7 +18,7 @@ const Input = ({ value, setValue }: InputProps) => {
     <div className="bg-gray-300 p-4">
       <input
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={setValue}
         type="text"
         placeholder="Type your message…"
         className="flex items-center h-10 w-full rounded px-3 text-sm"
@@ -28,13 +32,14 @@ enum Side {
   RIGHT,
 }
 
-interface MessageProps {
+interface IUIMessage {
   message: string;
   time: string;
   side: Side;
+  createdAt: string;
 }
 
-const Message = ({ message, time, side }: MessageProps) => {
+const Message = ({ message, time, side }: IUIMessage) => {
   const isLeft = side === Side.LEFT;
 
   const Avatar = (
@@ -63,52 +68,79 @@ const Message = ({ message, time, side }: MessageProps) => {
   );
 };
 
-const MESSAGES = [
-  {
-    side: Side.LEFT,
-    time: "2 min ago",
-    message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    side: Side.RIGHT,
-    time: "2 min ago",
-    message:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
-  },
-  {
-    side: Side.RIGHT,
-    time: "2 min ago",
-    message: "Lorem ipsum dolor sit amet.",
-  },
-  {
-    side: Side.LEFT,
-    time: "2 min ago",
-    message:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    side: Side.RIGHT,
-    time: "2 min ago",
-    message: "Lorem ipsum dolor sit.",
-  },
-];
+const mapBackendMessageToMessage = (backendMessage: {
+  userId: string;
+  message: string;
+  from: "user" | "bot";
+  createdAt: string;
+}): IUIMessage => {
+  return {
+    time: dayjs(backendMessage.createdAt).format(),
+    side: backendMessage.from === "user" ? Side.RIGHT : Side.LEFT,
+    message: backendMessage.message,
+    createdAt: backendMessage.createdAt,
+  };
+};
 
 const ChatPage = () => {
   const [inputValue, setInputValue] = useState<string | null>(null);
+  const [messages, setMessages] = useState<IUIMessage[]>([]);
+  const { userId } = useContext(UserContext);
+
+  useEffect(() => {
+    if (userId) {
+      axios
+        .get(`http://localhost:3000/api/users/${userId}/messages`)
+        .then((result) => {
+          console.log({ data: result.data });
+          setMessages(result.data.map(mapBackendMessageToMessage));
+        });
+    }
+  }, [userId]);
+
+  const onInputChange = useCallback((e) => {
+    const newInputValue = e.target.value;
+
+    setInputValue(
+      newInputValue.charAt(0).toUpperCase() + newInputValue.slice(1)
+    );
+  }, []);
+
+  const sendMessage = useCallback(() => {
+    axios
+      .post(`http://localhost:3000/api/messages`, {
+        userId,
+        message: inputValue,
+      })
+      .then((result) => {
+        setInputValue("");
+        setMessages((currentMessages) => [
+          ...currentMessages,
+          mapBackendMessageToMessage(result.data),
+        ]);
+      });
+  }, [inputValue]);
+
   return (
     <>
       <Head>
         <title>ReflexAI | Support Chat</title>
       </Head>
       <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
-        <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+        <div className="relative flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
           <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-            {MESSAGES.map((message) => (
-              <Message {...message} />
+            {messages.map((message) => (
+              <Message key={message.message} {...message} />
             ))}
           </div>
 
-          <Input value={inputValue} setValue={setInputValue} />
+          <Input value={inputValue} setValue={onInputChange} />
+          <button
+            className="absolute rounded-full w-8 h-8 bg-blue-800 bottom-5 right-5 text-white flex justify-center items-center"
+            onClick={sendMessage}
+          >
+            <i className="fa fa-send-o"></i>
+          </button>
         </div>
       </div>
     </>
