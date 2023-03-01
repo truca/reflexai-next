@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from "react";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 
-interface LoginProps {}
+interface RegisterProps {}
 
-export default function Login({}: LoginProps): any {
+export default function Register({}: RegisterProps): any {
   const [username, setUsername] = useState("");
 
   const onChangeUsername = useCallback((e) => {
@@ -14,10 +15,10 @@ export default function Login({}: LoginProps): any {
   const onSubmit = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault();
-      const result = await axios.get(
-        `http://localhost:3000/api/users/${username}`
-      );
-      if (result) window.location = "/chat";
+      const result = await axios.post("http://localhost:3000/api/users", {
+        name: username,
+      });
+      window.location = "/chat";
     },
     [username]
   );
@@ -38,20 +39,18 @@ export default function Login({}: LoginProps): any {
       >
         <div className="w-full h-100">
           <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
-            Log in to your account
+            Create an account
           </h1>
 
-          <form className="mt-6" action="#" method="POST">
+          <form className="mt-6">
             <div>
-              <label htmlFor="username" className="block text-gray-700">
-                Username
-              </label>
+              <label className="block text-gray-700">Username</label>
               <input
                 value={username}
                 onChange={onChangeUsername}
                 type="text"
                 name=""
-                id="username"
+                id=""
                 placeholder="Enter username"
                 className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
                 autoFocus
@@ -61,21 +60,20 @@ export default function Login({}: LoginProps): any {
 
             <button
               onClick={onSubmit}
-              type="submit"
               className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
               px-4 py-3 mt-6"
             >
-              Log In
+              Create account
             </button>
           </form>
 
           <p className="mt-8">
-            Need an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/register"
+              href="/login"
               className="text-blue-500 hover:text-blue-700 font-semibold"
             >
-              Create an account
+              Log in to your account
             </Link>
           </p>
         </div>
