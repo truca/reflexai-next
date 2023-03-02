@@ -8,18 +8,13 @@ Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_mediu
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-typescript&project-name=with-typescript&repository-name=with-typescript)
 
-## How to use it?
+## Installation Process :
 
-### Prerequisites
-
-- node installed
-- mongo installed
-
-### setup
-
-- clone this repo
-- start the mongo service
-- add a `.env.local` file in the root folder of the project, with these contents (modify them if you have a different setup)
+1. Clone/Download the project. (https://github.com/truca/reflexai-next)
+2. Clone the express server (socket server) (https://github.com/truca/reflexai-sockets)
+3. Start the mongo service
+4. Open the project directory on your machine using terminal or a code editor of your choice and type `npm i`
+5. Copy the next content into a `.env.local` file (modify if needed)
 
 ```
 MONGODB_URI=mongodb://127.0.0.1:27017/reflexai
@@ -27,10 +22,8 @@ SOCKETS_SERVER_URI=http://127.0.0.1:5000/
 REST_SERVER_URI=http://localhost:3000/
 ```
 
-```
-npm install
-npm dev
-```
+6. Once the packages are installed, type npm start and you'll be able to see the server up and running on your local host.
+7. For development purposes, use npm dev instead to start the server
 
 ## Deploy
 
