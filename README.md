@@ -10,38 +10,36 @@ Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_mediu
 
 ## How to use it?
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+### Prerequisites
 
-```bash
-npx create-next-app --example with-typescript with-typescript-app
-```
+- node installed
+- mongo installed
 
-```bash
-yarn create next-app --example with-typescript with-typescript-app
-```
+### setup
 
-```bash
-pnpm create next-app --example with-typescript with-typescript-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
-
-## Notes
-
-This example shows how to integrate the TypeScript type system into Next.js. Since TypeScript is supported out of the box with Next.js, all we have to do is to install TypeScript.
+- clone this repo
+- start the mongo service
+- add a `.env.local` file in the root folder of the project, with these contents (modify them if you have a different setup)
 
 ```
-npm install --save-dev typescript
+MONGODB_URI=mongodb://127.0.0.1:27017/reflexai
+SOCKETS_SERVER_URI=http://127.0.0.1:5000/
+REST_SERVER_URI=http://localhost:3000/
 ```
 
-To enable TypeScript's features, we install the type declarations for React and Node.
-
 ```
-npm install --save-dev @types/react @types/react-dom @types/node
+npm install
+npm dev
 ```
 
-When we run `next dev` the next time, Next.js will start looking for any `.ts` or `.tsx` files in our project and builds it. It even automatically creates a `tsconfig.json` file for our project with the recommended settings.
+## Deploy
 
-Next.js has built-in TypeScript declarations, so we'll get autocompletion for Next.js' modules straight away.
+Digital Ocean is an option, another option would be to host on any platform that supports docker containers with 3 containers: next, express and mongo. Another option for mongo would be to use Mongo Atlas
 
-A `type-check` script is also added to `package.json`, which runs TypeScript's `tsc` CLI in `noEmit` mode to run type-checking separately. You can then include this, for example, in your `test` scripts.
+## Future improvements
+
+- Add password for users
+- Improve the bot responses
+- Add Integration/e2e tests
+- Add monitoring/logs
+- Add storybook for the components
