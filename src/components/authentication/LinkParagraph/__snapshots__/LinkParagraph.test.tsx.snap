@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkParagraph renders correctly 1`] = `
+<p
+  className="mt-8"
+>
+  paragraphText
+   
+  <a
+    className="text-blue-500 hover:text-blue-700 font-semibold"
+    href="/login"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+    onTouchStart={[Function]}
+  >
+    linkText
+  </a>
+</p>
+`;

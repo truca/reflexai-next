@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkParagraph renders correctly 1`] = `
+<button
+  className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg   px-4 py-3 mt-6"
+  type="submit"
+/>
+`;
